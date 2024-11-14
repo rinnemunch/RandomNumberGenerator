@@ -4,11 +4,13 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
   Modal,
   TextInput,
   Pressable,
   Animated,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  Keyboard,
 } from "react-native";
 import { DeviceMotion } from "expo-sensors";
 
@@ -61,116 +63,156 @@ export default function App() {
   });
 
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: selectedTheme.backgroundColor },
-      ]}
-    >
-      <View style={styles.settingsButton}>
-        <Text
-          style={[styles.settingText, { color: selectedTheme.textColor }]}
-          onPress={() => setSettingsVisible(true)}
-        >
-          ⚙️
-        </Text>
-      </View>
-
-      <View style={styles.centeredContent}>
-        <Pressable
-          style={styles.numberContainer}
-          onPress={generateRandomNumber}
-        >
-          <Animated.Text
-            style={[
-              styles.numberDisplay,
-              { color: selectedTheme.textColor, transform: [{ rotate: spin }] },
-            ]}
-          >
-            {randomNumber}
-          </Animated.Text>
-          <Text style={[styles.message, { color: selectedTheme.textColor }]}>
-            Tap or shake for a random number
-          </Text>
-        </Pressable>
-      </View>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={settingsVisible}
-        onRequestClose={() => setSettingsVisible(false)}
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: selectedTheme.backgroundColor },
+        ]}
       >
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalText}>Settings</Text>
+        <View style={styles.settingsButton}>
+          <Text
+            style={[styles.settingText, { color: selectedTheme.textColor }]}
+            onPress={() => setSettingsVisible(true)}
+          >
+            ⚙️
+          </Text>
+        </View>
 
-          <Text style={styles.label}>Minimum Number</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="number-pad"
-            value={String(minNumber)}
-            onFocus={() => setMinNumber("")}
-            onBlur={() =>
-              setMinNumber((prev) =>
-                prev === "" ? 1 : Math.max(1, parseInt(prev))
-              )
-            }
-            onChangeText={(text) => setMinNumber(text)}
-          />
+        <View style={styles.centeredContent}>
+          <Pressable
+            style={styles.numberContainer}
+            onPress={generateRandomNumber}
+          >
+            <Animated.Text
+              style={[
+                styles.numberDisplay,
+                {
+                  color: selectedTheme.textColor,
+                  transform: [{ rotate: spin }],
+                },
+              ]}
+            >
+              {randomNumber}
+            </Animated.Text>
+            <Text style={[styles.message, { color: selectedTheme.textColor }]}>
+              Tap or shake for a random number
+            </Text>
+          </Pressable>
+        </View>
 
-          <Text style={styles.label}>Maximum Number</Text>
-          <TextInput
-            style={styles.input}
-            keyboardType="number-pad"
-            value={String(maxNumber)}
-            onFocus={() => setMaxNumber("")}
-            onBlur={() =>
-              setMaxNumber((prev) =>
-                prev === "" ? 100 : Math.min(100, parseInt(prev))
-              )
-            }
-            onChangeText={(text) => setMaxNumber(text)}
-          />
-
-          <Text style={styles.label}>Select Theme</Text>
-          <View style={styles.themeContainer}>
-            {themes.map((theme) => (
-              <Pressable
-                key={theme.name}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={settingsVisible}
+          onRequestClose={() => setSettingsVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View
+              style={[
+                styles.modalContent,
+                {
+                  backgroundColor:
+                    selectedTheme.name === "Dark" ? "#333" : "#fff",
+                },
+              ]}
+            >
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setSettingsVisible(false)}
+              >
+                <Text style={styles.closeButtonText}>✕</Text>
+              </TouchableOpacity>
+              <Text
+                style={[styles.modalText, { color: selectedTheme.textColor }]}
+              >
+                Settings
+              </Text>
+              <Text style={[styles.label, { color: selectedTheme.textColor }]}>
+                Minimum Number
+              </Text>
+              <TextInput
                 style={[
-                  styles.themeButton,
+                  styles.input,
                   {
+                    color: selectedTheme.textColor,
                     backgroundColor:
-                      selectedTheme.name === theme.name
-                        ? theme.buttonColor
-                        : theme.backgroundColor,
+                      selectedTheme.name === "Dark" ? "#333" : "#fff",
                   },
                 ]}
-                onPress={() => setSelectedTheme(theme)}
-              >
-                <Text
-                  style={[
-                    styles.themeButtonText,
-                    {
-                      color:
-                        selectedTheme.name === theme.name
-                          ? theme.textColor
-                          : theme.buttonColor,
-                    },
-                  ]}
-                >
-                  {theme.name}
-                </Text>
-              </Pressable>
-            ))}
+                keyboardType="number-pad"
+                value={String(minNumber)}
+                onFocus={() => setMinNumber("")}
+                onBlur={() =>
+                  setMinNumber((prev) =>
+                    prev === "" ? 1 : Math.max(1, parseInt(prev))
+                  )
+                }
+                onChangeText={(text) => setMinNumber(text)}
+              />
+              <Text style={[styles.label, { color: selectedTheme.textColor }]}>
+                Maximum Number
+              </Text>
+              <TextInput
+                style={[
+                  styles.input,
+                  {
+                    color: selectedTheme.textColor,
+                    backgroundColor:
+                      selectedTheme.name === "Dark" ? "#333" : "#fff",
+                  },
+                ]}
+                keyboardType="number-pad"
+                value={String(maxNumber)}
+                onFocus={() => setMaxNumber("")}
+                onBlur={() =>
+                  setMaxNumber((prev) =>
+                    prev === "" ? 100 : Math.min(100, parseInt(prev))
+                  )
+                }
+                onChangeText={(text) => setMaxNumber(text)}
+              />
+              <Text style={[styles.label, { color: selectedTheme.textColor }]}>
+                Select Theme
+              </Text>
+              <View style={styles.themeContainer}>
+                {themes.map((theme) => (
+                  <Pressable
+                    key={theme.name}
+                    style={[
+                      styles.themeButton,
+                      {
+                        backgroundColor:
+                          selectedTheme.name === theme.name
+                            ? theme.buttonColor
+                            : theme.backgroundColor,
+                      },
+                    ]}
+                    onPress={() => setSelectedTheme(theme)}
+                  >
+                    <Text
+                      style={[
+                        styles.themeButtonText,
+                        {
+                          color:
+                            selectedTheme.name === theme.name
+                              ? theme.textColor
+                              : theme.buttonColor,
+                        },
+                      ]}
+                    >
+                      {theme.name}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
+            </View>
           </View>
+        </Modal>
 
-          <Button title="Close" onPress={() => setSettingsVisible(false)} />
-        </View>
-      </Modal>
-
-      <StatusBar style="auto" />
-    </View>
+        <StatusBar style="auto" />
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -200,9 +242,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  modalContent: {
+    width: "90%",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
   modalText: {
     fontSize: 24,
-    color: "#fff",
     marginBottom: 20,
   },
   centeredContent: {
@@ -221,7 +268,6 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
-    color: "#fff",
     marginVertical: 10,
     textAlign: "center",
   },
@@ -250,6 +296,20 @@ const styles = StyleSheet.create({
   },
   themeButtonText: {
     fontSize: 16,
+    fontWeight: "bold",
+  },
+  closeButton: {
+    position: "absolute",
+    top: 40,
+    right: 20,
+    padding: 10,
+    backgroundColor: "#f00",
+    borderRadius: 15,
+    zIndex: 1,
+  },
+  closeButtonText: {
+    color: "#fff",
+    fontSize: 18,
     fontWeight: "bold",
   },
 });

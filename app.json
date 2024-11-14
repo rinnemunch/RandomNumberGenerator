@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "RandomNumberGenerator",
-    "slug": "RandomNumberGenerator",
+    "name": "Random Number Generator",
+    "slug": "Random Number Generator",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
